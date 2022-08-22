@@ -35,8 +35,13 @@ def log_this(student):
 root = tk.Tk()
 root.title('Classroom Signout')
 
-ttk.Label(root, text='Students').pack()
+#ttk.Label(root, text='Students').grid(row=0,column=0)
 
-#ttk.Button(root, text=student, command=lambda: log_this(student)).pack()
+#buttons = []
+for i, student in enumerate(period3_students):
+    button = ttk.Button(root, text=student, command=lambda s=period3_students[i]: log_this(s))
+    #buttons.append(button)
+    button.grid(row=i, column=1)
+    label = ttk.Label(root, text='out').grid(row=i, column=2)
 
 root.mainloop()
