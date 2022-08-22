@@ -1,2 +1,2 @@
-# signout-sheet
-A Java-based classroom signout sheet
+# Signout Sheet
+A classroom signout sheet
