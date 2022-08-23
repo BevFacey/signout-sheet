@@ -5,6 +5,7 @@ import csv
 
 import tkinter as tk
 from tkinter import ttk
+from turtle import color
 
 # log program start time
 with open('signout-log.csv', 'a') as logfile:
@@ -30,9 +31,9 @@ def log_this(i):
     label = labels[i]
     label_text = label.cget('text')
     if label_text == 'out':
-        label.config(text='in')
+        label.config(text='in', fg='black')
     else:
-        label.config(text='out')
+        label.config(text='out', fg='red')
     print(student, label.cget('text'), now)
     with open('signout-log.csv', 'a') as logfile:
         logfile.write(student + ',' + str(now)  + '\n')
@@ -41,12 +42,13 @@ window = tk.Tk()
 window.title('Classroom Signout')
 
 # add buttons and labels
+padding = 5
 labels = []
 for n, student in enumerate(period3_students):
-    button = ttk.Button(window, text=student, command=lambda i=n: log_this(i))
-    button.grid(row=n, column=1)
-    label = ttk.Label(window, text='out')
+    button = tk.Button(window, text=student, command=lambda i=n: log_this(i))
+    button.grid(row=n, column=1, padx=padding, pady=padding)
+    label = tk.Label(window, text='out', fg='red')
     labels.append(label)
-    label.grid(row=n, column=2)
+    label.grid(row=n, column=2, padx=padding, pady=padding)
      
 window.mainloop()
