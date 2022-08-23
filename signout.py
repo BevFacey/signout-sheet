@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
-import datetime
+from datetime import datetime
 import csv
-
-#from tkinter import ttk
-#from tkinter import *
-#from tkinter.ttk import *
 
 import tkinter as tk
 from tkinter import ttk
+
+# log program start time
+with open('signout-log.csv', 'a') as logfile:
+    logfile.write('Program Started' +','+ str(datetime.now()) + '\n')
 
 # read CSV file in the format  Name,Period
 period3_students = []
@@ -24,24 +24,29 @@ with open('students.csv') as csvfile:
             else:
                 period4_students.append(student)
 
+def log_this(i):
+    student = period3_students[i]
+    now = datetime.now()
+    label = labels[i]
+    label_text = label.cget('text')
+    if label_text == 'out':
+        label.config(text='in')
+    else:
+        label.config(text='out')
+    print(student, label.cget('text'), now)
+    with open('signout-log.csv', 'a') as logfile:
+        logfile.write(student + ',' + str(now)  + '\n')
 
-def log_this(student):
-    print(student)
+window = tk.Tk()
+window.title('Classroom Signout')
 
-#style = ttk.Style()
-#style.configure('BW.TLabel', foreground='black', background='white')
-#l1 = ttk.Label(text="Test", style="BW.TLabel")
-
-root = tk.Tk()
-root.title('Classroom Signout')
-
-#ttk.Label(root, text='Students').grid(row=0,column=0)
-
-#buttons = []
-for i, student in enumerate(period3_students):
-    button = ttk.Button(root, text=student, command=lambda s=period3_students[i]: log_this(s))
-    #buttons.append(button)
-    button.grid(row=i, column=1)
-    label = ttk.Label(root, text='out').grid(row=i, column=2)
-
-root.mainloop()
+# add buttons and labels
+labels = []
+for n, student in enumerate(period3_students):
+    button = ttk.Button(window, text=student, command=lambda i=n: log_this(i))
+    button.grid(row=n, column=1)
+    label = ttk.Label(window, text='out')
+    labels.append(label)
+    label.grid(row=n, column=2)
+     
+window.mainloop()
