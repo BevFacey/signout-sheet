@@ -13,7 +13,7 @@ with open('signout-log.csv', 'a') as logfile:
 def log_this(_):
     infoLabel.config(text='')
     now = datetime.now()
-    student = inputbox.get(1.0, "end-1c").strip()
+    student = inputbox.get(1.0, "end-1c").strip().capitalize()
     if student == '':
         infoLabel.config(text='Please type your name')
     else:
@@ -60,7 +60,7 @@ def button3_command():
 
 window = tk.Tk()
 window.title('Classroom Signout')
-window.geometry('800x600')
+window.geometry('1280x1024')
 window.configure(bg='white')
 buttonfont = font.Font(size=50)
 
