@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 
-students = ["Alice", "Bob", "Charlie", "David", "Eve"]
+#students = ["Alice", "Bob", "Charlie", "David", "Eve"]
+
+# read student list from students.csv
+students = []
+with open('students.csv', 'r') as studentfile:
+    for n, line in enumerate(studentfile):
+        if n > 0:  # skip the first line
+            try:
+                student_name = line.split(',')[0].strip()
+                students.append(student_name)
+            except:
+                pass
+
 number_of_columns = 4
 
 from datetime import datetime
