@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
-#students = ["Alice", "Bob", "Charlie", "David", "Eve"]
+number_of_columns = 4
 
 # read student list from students.csv
 students = []
+periods = []
 with open('students.csv', 'r') as studentfile:
     for n, line in enumerate(studentfile):
         if n > 0:  # skip the first line
             try:
-                student_name = line.split(',')[0].strip()
-                students.append(student_name)
+                students.append(line.split(',')[0].strip())
+                periods.append(int(line.split(',')[1].strip()))
             except:
                 pass
 
-number_of_columns = 4
+colors = ["#43B0F1", "#059DC0", "#1E3D58", "#057DCD"]
 
 from datetime import datetime
 import tkinter as tk
@@ -82,7 +83,7 @@ buttons = []
 for i in range(len(students)):
     row = i // number_of_columns + 1
     col = i % number_of_columns
-    button = tk.Button(root, text=students[i], bg='white', command=lambda i=i: click_button(buttons[i]))
+    button = tk.Button(root, text=students[i], bg='white', fg=colors[periods[i]-1], command=lambda i=i: click_button(buttons[i]))
     button.grid(row=row, column=col)
     buttons.append(button)
 
