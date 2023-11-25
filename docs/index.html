@@ -9,15 +9,25 @@
     </style>
   </head>
   <body>
-    <h1>Student Break Timer</h1>
-    <div id="display" style="font-size: 24px;">00:00</div>
-
-
+    <div id="timedisplay" style="font-size: 24px; color: black; text-align: center;">00:00</div>
+    <div id="buttons" style="text-align: center;"></div>
     <script>
-        const number_of_columns = 4;
-        const students = ["Student1", "Student2", "Student3", "Student4"];
-        const periods = [1, 2, 3, 4];
-        const colors = ["#43B0F1", "#059DC0", "#1E3D58", "#057DCD"];
+        //const number_of_columns = 4;
+        const students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
+        //const periods = [1, 2, 3, 4];
+        //const colors = ["#43B0F1", "#059DC0", "#1E3D58", "#057DCD"];
+        let buttons = [];
+        // loop through students and create a button for each
+        for (let i=0; i<students.length; i++) {
+            //const row = Math.floor(i / number_of_columns) + 1;
+            //const col = i % number_of_columns;
+            const button = document.createElement("button");
+            button.textContent = students[i];
+            //button.style.color = colors[periods[i] - 1];
+            button.addEventListener("click", () => clickButton(button));
+            document.body.appendChild(button);
+            buttons.push(button);
+        }
 
         let seconds = 0;
         let minutes = 0;
@@ -36,34 +46,36 @@
                 minutes += 1;
             }
             const timeString = `${formatTime(minutes)}:${formatTime(seconds)}`;
-            display.textContent = timeString;
+            timedisplay.textContent = timeString;
             setTimeout(updateTime, 1000);
             }
         }
 
         function clickButton(button) {
             if (seconds || minutes) {
-            const logThis = `${button.textContent},${minutes * 60 + seconds},${new Date().toISOString()}`;
-            saveToLocalStorage(logThis);
+                const logThis = `${button.textContent},${minutes * 60 + seconds},${new Date().toISOString()}`;
+                saveToLocalStorage(logThis);
             }
             seconds = 0;
             minutes = 0;
-            display.textContent = "00:00";
+            timedisplay.textContent = "00:00";
             if (!running) {
-            running = true;
-            activeButton = button;
-            buttons.forEach((otherButton) => {
-                if (otherButton !== button) {
-                otherButton.disabled = true;
-                }
-            });
-            updateTime();
+                running = true;
+                // set the timedisplay to the button's color
+                timedisplay.style.color = button.style.color;
+                activeButton = button;
+                buttons.forEach((otherButton) => {
+                    if (otherButton !== button) {
+                    otherButton.disabled = true;
+                    }
+                });
+                updateTime();
             } else {
-            running = false;
-            activeButton = null;
-            buttons.forEach((otherButton) => {
-                otherButton.disabled = false;
-            });
+                running = false;
+                activeButton = null;
+                buttons.forEach((otherButton) => {
+                    otherButton.disabled = false;
+                });
             }
         }
 
@@ -83,17 +95,7 @@
         //display.textContent = "00:00";
         //root.appendChild(display);
 
-        const buttons = [];
-        for (let i = 0; i < students.length; i++) {
-            const row = Math.floor(i / number_of_columns) + 1;
-            const col = i % number_of_columns;
-            const button = document.createElement("button");
-            button.textContent = students[i];
-            button.style.color = colors[periods[i] - 1];
-            button.addEventListener("click", () => clickButton(button));
-            root.appendChild(button);
-            buttons.push(button);
-        }
+
         </script>
   </body>
 </html>
