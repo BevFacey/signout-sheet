@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <div id="buttons">
+      <button id="fifteenMinutes" onclick="fifteenMinutes()">15 minutes</button>
+      <button id="tenMinutes" onclick="tenMinutes()">10 minutes</button>
+      <button id="twoMinutes" onclick="twoMinutes()">2 minutes</button>
+      <button id="oneMinute" onclick="oneMinute()">1 minute</button>
+    </div>
+    <div id="countdown"></div>
+    <script>
+      function fifteenMinutes() {startCountdown(15);}
+      function tenMinutes() {startCountdown(10);}
+      function twoMinutes() {startCountdown(2);}
+      function oneMinute() {startCountdown(1);}
+      
+      function startCountdown(minutes) {
+        document.getElementById("buttons").style.display = "none"; // hide the buttons div
+        let count = parseInt(minutes) * 60;
+        if (!count > 0) {
+          count = 60;
+        }
+        let displayTime = "0:00";
+        const timer = setInterval(function() {
+          count--;
+          displayTime = Math.floor(count / 60) + ":" + ("0" + count % 60).slice(-2);
+          document.getElementById("countdown").innerHTML = displayTime;
+          if (count === 0) {
+            clearInterval(timer);
+            document.getElementById("countdown").innerHTML = "0";
+            //alert("Time's up!");
+          }
+          if (count < 0) {
+            clearInterval(timer);
+            document.getElementById("countdown").innerHTML = "0";
+          }
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
