@@ -5,13 +5,15 @@
   </head>
   <body>
     <div id="buttons">
-      <button id="fifteenMinutes" onclick="fifteenMinutes()">15 minutes</button>
-      <button id="tenMinutes" onclick="tenMinutes()">10 minutes</button>
-      <button id="twoMinutes" onclick="twoMinutes()">2 minutes</button>
-      <button id="oneMinute" onclick="oneMinute()">1 minute</button>
+      <button id="thirtyMinutes" onclick="thirtyMinutes()">30 minutes</button><br>
+      <button id="fifteenMinutes" onclick="fifteenMinutes()">15 minutes</button><br>
+      <button id="tenMinutes" onclick="tenMinutes()">10 minutes</button><br>
+      <button id="twoMinutes" onclick="twoMinutes()">2 minutes</button><br>
+      <button id="oneMinute" onclick="oneMinute()">1 minute</button><br>
     </div>
-    <div id="countdown"></div>
+    <div id="countdown" style="text-align:center;font-size:50px"></div>
     <script>
+      function thirtyMinutes() {startCountdown(30);}
       function fifteenMinutes() {startCountdown(15);}
       function tenMinutes() {startCountdown(10);}
       function twoMinutes() {startCountdown(2);}
@@ -28,6 +30,9 @@
           count--;
           displayTime = Math.floor(count / 60) + ":" + ("0" + count % 60).slice(-2);
           document.getElementById("countdown").innerHTML = displayTime;
+          if (count < 60) {
+            document.getElementById("countdown").style.color = "red";
+          }
           if (count === 0) {
             clearInterval(timer);
             document.getElementById("countdown").innerHTML = "0";
