@@ -9,7 +9,13 @@
       //countdown.html?minutes=5&seconds=3
       let parameters = new URLSearchParams(window.location.search);
       let minutes = parseInt(parameters.get("minutes"));
+      if (!minutes > 0) {
+        minutes = 0;
+      }
       let seconds = parseInt(parameters.get("seconds"));
+      if (!seconds > 0) {
+        seconds = 0;
+      }
       let count = seconds + minutes * 60;
       if (!count > 0) {
         count = 60;
