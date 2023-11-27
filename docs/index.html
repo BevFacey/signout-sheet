@@ -5,24 +5,47 @@
     <title>Student Break Timer</title>
     <style>
       body {font-family: Arial, sans-serif; background-color: white;}
+      table {width: 100%; text-align: center; font-size: 24px; padding: 10px;}
       button {background-color: white; border: none; padding: 10px; margin: 5px; cursor: pointer;}
     </style>
   </head>
   <body>
-    <div id="timedisplay" style="font-size: 24px; color: black; text-align: center;">00:00</div>
+    <table>
+        <tr>
+            <td><div id="timeDisplay"></div></td>
+            <td><div id="timerdisplay" style="font-size: 24px; text-align: center;">00:00</div></td>
+            <td><div id="dateDisplay"></div></td>
+        </tr>
+    </table>
+    
     <div id="buttons" style="text-align: center;"></div>
     <script>
-        const students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
-        const buttonTextColor = "#0161ad";
-        const buttonBackgroundColor = "#fec502";
+        const color1 = "#0161ad";
+        const color2 = "#fec502";
+        
+        // get student list from parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams);
+        //const students = urlParams.get('students').split(",");
+        //students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
+        if (urlParams == 0 || urlParams == null) {
+            students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
+        }
+        
+
         //const periods = [1, 2, 3, 4];
         //const colors = ["#43B0F1", "#059DC0", "#1E3D58", "#057DCD"];
+        
+        document.querySelector("table").style.backgroundColor = color1;
+        document.querySelector("table").style.color = color2;
+        timerdisplay.style.color = color1;
+        
         let buttons = [];
         for (let i=0; i<students.length; i++) {  // loop through students and create a button for each
             const button = document.createElement("button");
             button.textContent = students[i];
-            button.style.color = buttonTextColor; //colors[periods[i] - 1];
-            button.style.backgroundColor = buttonBackgroundColor;
+            button.style.color = color1; //colors[periods[i] - 1];
+            button.style.backgroundColor = color2;
             button.addEventListener("click", () => clickButton(button));
             document.body.appendChild(button);
             buttons.push(button);
@@ -45,7 +68,7 @@
                 minutes += 1;
             }
             const timeString = `${formatTime(minutes)}:${formatTime(seconds)}`;
-            timedisplay.textContent = timeString;
+            timerdisplay.textContent = timeString;
             setTimeout(updateTime, 1000);
             }
         }
@@ -57,10 +80,15 @@
             }
             seconds = 0;
             minutes = 0;
-            timedisplay.textContent = "00:00";
+            timerdisplay.textContent = "00:00";
             if (!running) {
                 running = true;
-                timedisplay.style.color = button.style.color;  // set the timedisplay to the button's color
+                //timerdisplay.style.color = button.style.color;  // set the timerdisplay to the button's color
+                timerdisplay.style.color = color2;
+                if (minutes > 10) {
+                    //timerdisplay.style.color = "red";
+                    timerdisplay.style.fontSize = "48px";
+                }
                 activeButton = button;
                 buttons.forEach((otherButton) => {
                     if (otherButton !== button) {
@@ -72,11 +100,14 @@
                 updateTime();
             } else {
                 running = false;
+                timerdisplay.style.color = color1;
+                timerdisplay.style.fontSize = "24px";
                 activeButton = null;
                 buttons.forEach((otherButton) => {
                     otherButton.disabled = false;
-                    otherButton.style.backgroundColor = buttonBackgroundColor;
-                    otherButton.style.color = buttonTextColor;
+                    otherButton.style.backgroundColor = color2;
+                    otherButton.style.color = color1;
+                    timerdisplay.style.color = "white";
                 });
             }
         }
