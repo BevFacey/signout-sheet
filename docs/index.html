@@ -12,18 +12,17 @@
     <div id="timedisplay" style="font-size: 24px; color: black; text-align: center;">00:00</div>
     <div id="buttons" style="text-align: center;"></div>
     <script>
-        //const number_of_columns = 4;
         const students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
+        const buttonTextColor = "#0161ad";
+        const buttonBackgroundColor = "#fec502";
         //const periods = [1, 2, 3, 4];
         //const colors = ["#43B0F1", "#059DC0", "#1E3D58", "#057DCD"];
         let buttons = [];
-        // loop through students and create a button for each
-        for (let i=0; i<students.length; i++) {
-            //const row = Math.floor(i / number_of_columns) + 1;
-            //const col = i % number_of_columns;
+        for (let i=0; i<students.length; i++) {  // loop through students and create a button for each
             const button = document.createElement("button");
             button.textContent = students[i];
-            //button.style.color = colors[periods[i] - 1];
+            button.style.color = buttonTextColor; //colors[periods[i] - 1];
+            button.style.backgroundColor = buttonBackgroundColor;
             button.addEventListener("click", () => clickButton(button));
             document.body.appendChild(button);
             buttons.push(button);
@@ -61,12 +60,13 @@
             timedisplay.textContent = "00:00";
             if (!running) {
                 running = true;
-                // set the timedisplay to the button's color
-                timedisplay.style.color = button.style.color;
+                timedisplay.style.color = button.style.color;  // set the timedisplay to the button's color
                 activeButton = button;
                 buttons.forEach((otherButton) => {
                     if (otherButton !== button) {
-                    otherButton.disabled = true;
+                        otherButton.disabled = true;
+                        otherButton.style.backgroundColor = "#ffffff";
+                        otherButton.style.color = "#ffffff";
                     }
                 });
                 updateTime();
@@ -75,6 +75,8 @@
                 activeButton = null;
                 buttons.forEach((otherButton) => {
                     otherButton.disabled = false;
+                    otherButton.style.backgroundColor = buttonBackgroundColor;
+                    otherButton.style.color = buttonTextColor;
                 });
             }
         }
@@ -84,17 +86,6 @@
             logs.push(data);
             localStorage.setItem('signout-logs', JSON.stringify(logs));
         }
-
-        //const root = document.createElement("div");
-        //root.innerHTML = "<h1>Student Break Timer</h1>";
-        //document.body.appendChild(root);
-
-        //const display = document.createElement("div");
-        //display.id = "display";
-        //display.style.fontSize = "24px";
-        //display.textContent = "00:00";
-        //root.appendChild(display);
-
 
         </script>
   </body>
