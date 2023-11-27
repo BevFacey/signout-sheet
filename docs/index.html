@@ -4,41 +4,41 @@
     <meta charset="UTF-8">
     <title>Student Break Timer</title>
     <style>
-      body {font-family: Arial, sans-serif; background-color: white;}
-      table {width: 100%; text-align: center; font-size: 24px; padding: 10px;}
-      button {background-color: white; border: none; padding: 10px; margin: 5px; cursor: pointer;}
+        body {font-family: Arial, sans-serif; background-color: white;}
+        table {width: 100%; table-layout: fixed; font-size: 24px; padding: 10px;}
+        td {width: 33%;}
+        button {background-color: white; border: none; padding: 10px; margin: 5px; cursor: pointer;}
     </style>
   </head>
   <body>
     <table>
         <tr>
-            <td><div id="timeDisplay"></div></td>
+            <td><div id="timeDisplay" style="text-align: left;"></div></td>
             <td><div id="timerdisplay" style="font-size: 24px; text-align: center;">00:00</div></td>
-            <td><div id="dateDisplay"></div></td>
+            <td><div id="dateDisplay" style="text-align: right;" onclick="displayDate()"></div></td>
         </tr>
     </table>
     
     <div id="buttons" style="text-align: center;"></div>
     <script>
-        const color1 = "#0161ad";
-        const color2 = "#fec502";
-        
-        // get student list from parameter
+        let color1 = "#0161ad";
+        let color2 = "#fec502";
+
+        // ?students=one,two,three,four,five&color1=black&color2=%23ff0000
         const urlParams = new URLSearchParams(window.location.search);
-        console.log(urlParams);
-        //const students = urlParams.get('students').split(",");
-        //students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
-        if (urlParams == 0 || urlParams == null) {
+        if (urlParams.has('students')) {
+            students = urlParams.get('students').split(",");
+        }
+        else {
             students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
         }
-        
-
-        //const periods = [1, 2, 3, 4];
-        //const colors = ["#43B0F1", "#059DC0", "#1E3D58", "#057DCD"];
+        if (urlParams.has('color1')) {color1 = urlParams.get('color1');} 
+        if (urlParams.has('color2')) {color2 = urlParams.get('color2');}
         
         document.querySelector("table").style.backgroundColor = color1;
         document.querySelector("table").style.color = color2;
         timerdisplay.style.color = color1;
+        displayDate();
         
         let buttons = [];
         for (let i=0; i<students.length; i++) {  // loop through students and create a button for each
@@ -56,24 +56,25 @@
         let running = false;
         let activeButton = null;
       
-        function formatTime(time) {
+        function formatTimer(time) {
             return time < 10 ? `0${time}` : `${time}`;
         }
 
-        function updateTime() {
+        function updateTimer() {
             if (running) {
             seconds += 1;
             if (seconds === 60) {
                 seconds = 0;
                 minutes += 1;
             }
-            const timeString = `${formatTime(minutes)}:${formatTime(seconds)}`;
+            const timeString = `${formatTimer(minutes)}:${formatTimer(seconds)}`;
             timerdisplay.textContent = timeString;
-            setTimeout(updateTime, 1000);
+            setTimeout(updateTimer, 1000);
             }
         }
 
         function clickButton(button) {
+            displayDate();
             if (seconds || minutes) {
                 const logThis = `${button.textContent},${minutes * 60 + seconds},${new Date().toISOString()}`;
                 saveToLocalStorage(logThis);
@@ -97,7 +98,7 @@
                         otherButton.style.color = "#ffffff";
                     }
                 });
-                updateTime();
+                updateTimer();
             } else {
                 running = false;
                 timerdisplay.style.color = color1;
@@ -107,7 +108,6 @@
                     otherButton.disabled = false;
                     otherButton.style.backgroundColor = color2;
                     otherButton.style.color = color1;
-                    timerdisplay.style.color = "white";
                 });
             }
         }
@@ -116,6 +116,33 @@
             const logs = JSON.parse(localStorage.getItem('signout-logs')) || [];
             logs.push(data);
             localStorage.setItem('signout-logs', JSON.stringify(logs));
+        }
+
+        function loadFromLocalStorage() {
+            const logs = JSON.parse(localStorage.getItem('signout-logs')) || [];
+            logs.forEach((log) => {
+                const [student, time, date] = log.split(',');
+                const row = document.createElement('tr');
+                const studentCell = document.createElement('td');
+                studentCell.textContent = student;
+                const timeCell = document.createElement('td');
+                timeCell.textContent = time;
+                const dateCell = document.createElement('td');
+                dateCell.textContent = date;
+                row.appendChild(studentCell);
+                row.appendChild(timeCell);
+                row.appendChild(dateCell);
+                document.querySelector('tbody').appendChild(row);
+            });
+        }
+
+        function displayDate() {
+            const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            let date = new Date();
+            let weekdayNumber = date.getDay();
+            let weekday = weekdays[weekdayNumber];
+            let dateString = weekday + " " + date.toISOString().split("T")[0];
+            dateDisplay.textContent = dateString;
         }
 
         </script>
