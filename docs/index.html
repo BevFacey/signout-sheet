@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Student Break Timer Creator</title>
+    <style>
+        body {font-family: Arial, sans-serif; background-color: white;}
+        table {width: 100%; table-layout: fixed; font-size: 24px; padding: 10px;}
+        button {background-color: white; border: none; padding: 10px; margin: 5px; cursor: pointer;}
+    </style>
+  </head>
+  <body>
+    <table>
+        <tr><td>testing</td>
+        </tr>
+    </table>
+    <div id="colorPicker">
+        <input type="color" id="color1" value="#000000">
+        <input type="color" id="color2" value="#ffffff">
+        <button id="preview">preview</button>
+    </div>
+    <div id="buttons" style="text-align: center;"></div>
+    <script>
+        let color1 = "#000000";
+        let color2 = "#ffffff";
+        
+        document.querySelector("#color1").addEventListener("change", () => {
+            color1 = document.querySelector("#color1").value;
+            document.querySelector("table").style.backgroundColor = color1;
+        });
+        document.querySelector("#color2").addEventListener("change", () => {
+            color2 = document.querySelector("#color2").value;
+            document.querySelector("table").style.color = color2;
+        });
+
+        
+        
+
+
+        </script>
+  </body>
+</html>
