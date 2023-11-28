@@ -10,7 +10,7 @@
     </style>
   </head>
   <body>
-    <h1>Student Break Timer Creator</h1>
+    <h1 id="title">Student Break Timer Creator</h1>
     <table>
         <tr>
             <td>Paste student names into the text boxes, then click the generate timer button.</td>
@@ -40,17 +40,17 @@
     
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
-        document.querySelector("#generate").addEventListener("click", () => {
+        document.getElementById("generate").addEventListener("click", () => {
             // get the text from the textareas, split it by new line, remove empty values, and join it with !
-            let class1Array = document.querySelector("#class1").value.split("\n").filter(Boolean).join("!");
-            let class2Array = document.querySelector("#class2").value.split("\n").filter(Boolean).join("!");
-            let class3Array = document.querySelector("#class3").value.split("\n").filter(Boolean).join("!");
-            let class4Array = document.querySelector("#class4").value.split("\n").filter(Boolean).join("!");
-            let class5Array = document.querySelector("#class5").value.split("\n").filter(Boolean).join("!");
-            let class6Array = document.querySelector("#class6").value.split("\n").filter(Boolean).join("!");
+            let class1Array = document.getElementById("class1").value.split("\n").filter(Boolean).join("!");
+            let class2Array = document.getElementById("class2").value.split("\n").filter(Boolean).join("!");
+            let class3Array = document.getElementById("class3").value.split("\n").filter(Boolean).join("!");
+            let class4Array = document.getElementById("class4").value.split("\n").filter(Boolean).join("!");
+            let class5Array = document.getElementById("class5").value.split("\n").filter(Boolean).join("!");
+            let class6Array = document.getElementById("class6").value.split("\n").filter(Boolean).join("!");
             // get the colors
-            let color1 = document.querySelector("#color1").value;
-            let color2 = document.querySelector("#color2").value;
+            let color1 = document.getElementById("color1").value;
+            let color2 = document.getElementById("color2").value;
             // build the url
             let url = "https://bev.facey.rocks/signout-sheet/timer.html?class1="+class1Array;
             if (class2Array) {url += "&class2="+class2Array;}
@@ -60,19 +60,19 @@
             if (class6Array) {url += "&class6="+class6Array;}
             if (color1!="#000000") {url += "&color1="+color1.replace("#","%23");}
             if (color2!="#ffffff") {url += "&color2="+color2.replace("#","%23");}
-            document.querySelector("#url").innerHTML = "Click or bookmark this link:<br><a href='" + url + "'>" + url + "</a>";
-            document.querySelector("#url").style.color = "black";
+            document.getElementById("url").innerHTML = "Click or bookmark this link:<br><a href='" + url + "'>" + url + "</a>";
+            document.getElementById("url").style.color = "black";
             new QRCode(document.getElementById("qrcode"), url);
         });
 
         // color pickers
-        document.querySelector("#color1").addEventListener("change", () => {
-            let color1 = document.querySelector("#color1").value;
-            document.querySelector("h1").style.backgroundColor = color1;
+        document.getElementById("color1").addEventListener("change", () => {
+            let color1 = document.getElementById("color1").value;
+            document.getElementById("title").style.backgroundColor = color1;
         });
-        document.querySelector("#color2").addEventListener("change", () => {
-            let color2 = document.querySelector("#color2").value;
-            document.querySelector("h1").style.color = color2;
+        document.getElementById("color2").addEventListener("change", () => {
+            let color2 = document.getElementById("color2").value;
+            document.getElementById("title").style.color = color2;
         });
 
     </script>
