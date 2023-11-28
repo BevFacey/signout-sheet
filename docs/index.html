@@ -35,38 +35,25 @@
     <script>
         // generate button
         document.querySelector("#generate").addEventListener("click", () => {
-            // get the text from the textareas
-            let class1 = document.querySelector("#class1").value;
-            let class2 = document.querySelector("#class2").value;
-            let class3 = document.querySelector("#class3").value;
-            let class4 = document.querySelector("#class4").value;
-            let class5 = document.querySelector("#class5").value;
-            let class6 = document.querySelector("#class6").value;
-            // split the text into an array
-            let class1Array = class1.split("\n");
-            let class2Array = class2.split("\n");
-            let class3Array = class3.split("\n");
-            let class4Array = class4.split("\n");
-            let class5Array = class5.split("\n");
-            let class6Array = class6.split("\n");
-            // remove empty elements from the array
-            class1Array = class1Array.filter(Boolean);
-            class2Array = class2Array.filter(Boolean);
-            class3Array = class3Array.filter(Boolean);
-            class4Array = class4Array.filter(Boolean);
-            class5Array = class5Array.filter(Boolean);
-            class6Array = class6Array.filter(Boolean);
-            // separate the array items by +
-            class1Array = class1Array.join("+");
-            class2Array = class2Array.join("+");
-            class3Array = class3Array.join("+");
-            class4Array = class4Array.join("+");
-            class5Array = class5Array.join("+");
-            class6Array = class6Array.join("+");
-            
+            // get the text from the textareas, split it by new line, remove empty values, and join it with +
+            let class1Array = document.querySelector("#class1").value.split("\n").filter(Boolean).join("+");
+            let class2Array = document.querySelector("#class2").value.split("\n").filter(Boolean).join("+");
+            let class3Array = document.querySelector("#class3").value.split("\n").filter(Boolean).join("+");
+            let class4Array = document.querySelector("#class4").value.split("\n").filter(Boolean).join("+");
+            let class5Array = document.querySelector("#class5").value.split("\n").filter(Boolean).join("+");
+            let class6Array = document.querySelector("#class6").value.split("\n").filter(Boolean).join("+");
+
+            // get the colors
             let color1 = document.querySelector("#color1").value;
             let color2 = document.querySelector("#color2").value;
-            let url = "https://misterhay.com/timer/?class1=" + class1Array + "&class2=" + class2Array + "&class3=" + class3Array + "&class4=" + class4Array + "&class5=" + class5Array + "&class6=" + class6Array + "&color1=" + color1 + "&color2=" + color2;
+            let url = "https://misterhay.com/timer/?class1="+class1Array;
+            if (class2Array) {url += class2Array;}
+            if (class3Array) {url += class3Array;}
+            if (class4Array) {url += class4Array;}
+            if (class5Array) {url += class5Array;}
+            if (class6Array) {url += class6Array;}
+            if (color1!="#000000") {url += "&color1="+color1;}
+            if (color2!="#ffffff") {url += "&color2="+color2;}
             document.querySelector("#url").innerHTML = "<a href='" + url + "'>" + url + "</a>";
         });
 
@@ -79,7 +66,7 @@
             let color2 = document.querySelector("#color2").value;
             document.querySelector("h1").style.color = color2;
         });
-
+        
         </script>
   </body>
 </html>
