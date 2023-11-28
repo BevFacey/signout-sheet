@@ -5,13 +5,23 @@
     <title>Student Break Timer Creator</title>
     <style>
         body {font-family: Arial, sans-serif; background-color: white;}
-        table {width: 100%; table-layout: fixed; font-size: 24px; padding: 10px;}
+        table {width: 100%; table-layout: fixed; padding: 10px; vertical-align: top;}
         button {background-color: platinum; padding: 4px; cursor: pointer;}
     </style>
   </head>
   <body>
     <h1>Student Break Timer Creator</h1>
-    Paste student names into the text boxes, then click the generate timer button.
+    <table>
+        <tr>
+            <td>Paste student names into the text boxes, then click the generate timer button.</td>
+            <td>
+                Optional colors for the timer:
+                    <input type="color" id="color1" value="#000000">
+                    <input type="color" id="color2" value="#ffffff">
+            </td>
+        </tr>
+    </table>
+    
     <table>
         <tr>
             <td><label for="class1">Class 1</label><br><textarea rows="25" id="class1"></textarea></td>
@@ -24,16 +34,12 @@
     </table>
     <div style="text-align: center;"><button style="font-size:larger;" id="generate">Generate Timer</button></div>
     <br>
-    <div style="text-align: center; color:#ffffff" id="url"></div>
-    <hr>
-    <p>Optional colors for the timer:</p>
-    <div id="colorPicker">
-        <input type="color" id="color1" value="#000000">
-        <input type="color" id="color2" value="#ffffff">
-    </div>
-    <div id="buttons" style="text-align: center;"></div>
+    <div style="text-align: center;" id="url"></div>
+    <br>
+    <div id="qrcode"></div>
+    
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
-        // generate button
         document.querySelector("#generate").addEventListener("click", () => {
             // get the text from the textareas, split it by new line, remove empty values, and join it with !
             let class1Array = document.querySelector("#class1").value.split("\n").filter(Boolean).join("!");
@@ -42,10 +48,10 @@
             let class4Array = document.querySelector("#class4").value.split("\n").filter(Boolean).join("!");
             let class5Array = document.querySelector("#class5").value.split("\n").filter(Boolean).join("!");
             let class6Array = document.querySelector("#class6").value.split("\n").filter(Boolean).join("!");
-
             // get the colors
             let color1 = document.querySelector("#color1").value;
             let color2 = document.querySelector("#color2").value;
+            // build the url
             let url = "https://bev.facey.rocks/signout-sheet/timer.html?class1="+class1Array;
             if (class2Array) {url += "&class2="+class2Array;}
             if (class3Array) {url += "&class3="+class3Array;}
@@ -54,7 +60,9 @@
             if (class6Array) {url += "&class6="+class6Array;}
             if (color1!="#000000") {url += "&color1="+color1.replace("#","%23");}
             if (color2!="#ffffff") {url += "&color2="+color2.replace("#","%23");}
-            document.querySelector("#url").innerHTML = "<a href='" + url + "'>" + url + "</a>";
+            document.querySelector("#url").innerHTML = "Click or bookmark this link:<br><a href='" + url + "'>" + url + "</a>";
+            document.querySelector("#url").style.color = "black";
+            new QRCode(document.getElementById("qrcode"), url);
         });
 
         // color pickers
@@ -67,6 +75,6 @@
             document.querySelector("h1").style.color = color2;
         });
 
-        </script>
+    </script>
   </body>
 </html>
