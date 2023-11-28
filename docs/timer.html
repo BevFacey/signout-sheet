@@ -11,7 +11,7 @@
     </style>
   </head>
   <body>
-    <table>
+    <table id="toprow">
         <tr>
             <td><div id="timeDisplay" style="text-align: left;"></div></td>
             <td><div id="timerdisplay" style="font-size: 24px; text-align: center;">00:00</div></td>
@@ -72,8 +72,8 @@
         }
 
         // style the header
-        document.querySelector("table").style.backgroundColor = color1;
-        document.querySelector("table").style.color = color2;
+        document.getElementById("toprow").style.backgroundColor = color1;
+        document.getElementById("toprow").style.color = color2;
         timerdisplay.style.color = color1;
 
         displayDate();
