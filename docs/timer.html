@@ -18,39 +18,67 @@
             <td><div id="dateDisplay" style="text-align: right;" onclick="displayDate()"></div></td>
         </tr>
     </table>
-    
+    <hr>
     <div id="buttons" style="text-align: center;"></div>
     <script>
-        let color1 = "#0161ad";
-        let color2 = "#fec502";
+        // file:///C:/Users/miste/Documents/GitHub/signout-sheet/docs/timer.html?class1=one!two!three&color1=#c43131&color2=black
+        let buttons = [];
 
-        // ?students=one,two,three,four,five&color1=black&color2=%23ff0000
+        //let color1 = "#0161ad";  // Facey colors
+        //let color2 = "#fec502";
+        let color1 = "#000000";
+        let color2 = "#ffffff";
+
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('students')) {
-            students = urlParams.get('students').split(",");
-        }
-        else {
-            students = ["Student1", "Student2", "Student3", "Student4", "Student5", "Student6", "Student7"];
-        }
         if (urlParams.has('color1')) {color1 = urlParams.get('color1');} 
         if (urlParams.has('color2')) {color2 = urlParams.get('color2');}
-        
+
+        if (urlParams.has('class1')) {
+            const class1 = urlParams.get('class1').split("!");
+            createButtonsFromArray(class1)
+        }
+        if (urlParams.has('class2')) {
+            const class2 = urlParams.get('class2').split("!");
+            createButtonsFromArray(class2)
+        }
+        if (urlParams.has('class3')) {
+            const class3 = urlParams.get('class3').split("!");
+            createButtonsFromArray(class3)
+        }
+        if (urlParams.has('class4')) {
+            const class4 = urlParams.get('class4').split("!");
+            createButtonsFromArray(class4)
+        }
+        if (urlParams.has('class5')) {
+            const class5 = urlParams.get('class5').split("!");
+            createButtonsFromArray(class5)
+        }
+        if (urlParams.has('class6')) {
+            const class6 = urlParams.get('class6').split("!");
+            createButtonsFromArray(class6)
+        }
+
+        function createButtonsFromArray(array) {
+            for (let i=0; i<array.length; i++) {  // loop through students and create a button for each
+                const button = document.createElement("button");
+                button.textContent = array[i];
+                button.style.color = color1;
+                button.style.backgroundColor = color2;
+                button.addEventListener("click", () => clickButton(button));
+                document.body.appendChild(button);
+                buttons.push(button);
+            }
+            document.body.appendChild(document.createElement("hr"));  // add a horizontal rule
+        }
+
+        // style the header
         document.querySelector("table").style.backgroundColor = color1;
         document.querySelector("table").style.color = color2;
         timerdisplay.style.color = color1;
-        displayDate();
-        
-        let buttons = [];
-        for (let i=0; i<students.length; i++) {  // loop through students and create a button for each
-            const button = document.createElement("button");
-            button.textContent = students[i];
-            button.style.color = color1; //colors[periods[i] - 1];
-            button.style.backgroundColor = color2;
-            button.addEventListener("click", () => clickButton(button));
-            document.body.appendChild(button);
-            buttons.push(button);
-        }
 
+        displayDate();
+
+        // timer
         let seconds = 0;
         let minutes = 0;
         let running = false;
@@ -84,7 +112,6 @@
             timerdisplay.textContent = "00:00";
             if (!running) {
                 running = true;
-                //timerdisplay.style.color = button.style.color;  // set the timerdisplay to the button's color
                 timerdisplay.style.color = color2;
                 if (minutes > 10) {
                     //timerdisplay.style.color = "red";
