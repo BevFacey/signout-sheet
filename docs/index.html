@@ -6,36 +6,79 @@
     <style>
         body {font-family: Arial, sans-serif; background-color: white;}
         table {width: 100%; table-layout: fixed; font-size: 24px; padding: 10px;}
-        button {background-color: white; border: none; padding: 10px; margin: 5px; cursor: pointer;}
+        button {background-color: platinum; padding: 4px; cursor: pointer;}
     </style>
   </head>
   <body>
+    <h1>Student Break Timer Creator</h1>
+    Paste student names into the text boxes, then click the generate timer button.
     <table>
-        <tr><td>testing</td>
+        <tr>
+            <td><label for="class1">Class 1</label><br><textarea rows="25" id="class1"></textarea></td>
+            <td><label for="class2">Class 2</label><br><textarea rows="25" id="class2"></textarea></td>
+            <td><label for="class3">Class 3</label><br><textarea rows="25" id="class3"></textarea></td>
+            <td><label for="class4">Class 4</label><br><textarea rows="25" id="class4"></textarea></td>
+            <td><label for="class5">Class 5</label><br><textarea rows="25" id="class5"></textarea></td>
+            <td><label for="class6">Class 6</label><br><textarea rows="25" id="class6"></textarea></td>
         </tr>
     </table>
+    <div style="text-align: center;"><button style="font-size:larger;" id="generate">Generate Timer</button></div>
+    <br>
+    <div style="text-align: center; color:#ffffff" id="url"></div>
+    <hr>
+    <p>Optional colors for the timer:</p>
     <div id="colorPicker">
         <input type="color" id="color1" value="#000000">
         <input type="color" id="color2" value="#ffffff">
-        <button id="preview">preview</button>
     </div>
     <div id="buttons" style="text-align: center;"></div>
     <script>
-        let color1 = "#000000";
-        let color2 = "#ffffff";
-        
+        // generate button
+        document.querySelector("#generate").addEventListener("click", () => {
+            // get the text from the textareas
+            let class1 = document.querySelector("#class1").value;
+            let class2 = document.querySelector("#class2").value;
+            let class3 = document.querySelector("#class3").value;
+            let class4 = document.querySelector("#class4").value;
+            let class5 = document.querySelector("#class5").value;
+            let class6 = document.querySelector("#class6").value;
+            // split the text into an array
+            let class1Array = class1.split("\n");
+            let class2Array = class2.split("\n");
+            let class3Array = class3.split("\n");
+            let class4Array = class4.split("\n");
+            let class5Array = class5.split("\n");
+            let class6Array = class6.split("\n");
+            // remove empty elements from the array
+            class1Array = class1Array.filter(Boolean);
+            class2Array = class2Array.filter(Boolean);
+            class3Array = class3Array.filter(Boolean);
+            class4Array = class4Array.filter(Boolean);
+            class5Array = class5Array.filter(Boolean);
+            class6Array = class6Array.filter(Boolean);
+            // separate the array items by +
+            class1Array = class1Array.join("+");
+            class2Array = class2Array.join("+");
+            class3Array = class3Array.join("+");
+            class4Array = class4Array.join("+");
+            class5Array = class5Array.join("+");
+            class6Array = class6Array.join("+");
+            
+            let color1 = document.querySelector("#color1").value;
+            let color2 = document.querySelector("#color2").value;
+            let url = "https://misterhay.com/timer/?class1=" + class1Array + "&class2=" + class2Array + "&class3=" + class3Array + "&class4=" + class4Array + "&class5=" + class5Array + "&class6=" + class6Array + "&color1=" + color1 + "&color2=" + color2;
+            document.querySelector("#url").innerHTML = "<a href='" + url + "'>" + url + "</a>";
+        });
+
+        // color pickers
         document.querySelector("#color1").addEventListener("change", () => {
-            color1 = document.querySelector("#color1").value;
-            document.querySelector("table").style.backgroundColor = color1;
+            let color1 = document.querySelector("#color1").value;
+            document.querySelector("h1").style.backgroundColor = color1;
         });
         document.querySelector("#color2").addEventListener("change", () => {
-            color2 = document.querySelector("#color2").value;
-            document.querySelector("table").style.color = color2;
+            let color2 = document.querySelector("#color2").value;
+            document.querySelector("h1").style.color = color2;
         });
-
-        
-        
-
 
         </script>
   </body>
