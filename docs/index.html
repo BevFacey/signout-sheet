@@ -40,6 +40,7 @@
     
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
+        localStorage.clear();
         document.getElementById("generate").addEventListener("click", () => {
             // get the text from the textareas, split it by new line, remove empty values, and join it with !
             let class1Array = document.getElementById("class1").value.split("\n").filter(Boolean).join("!");

@@ -13,7 +13,7 @@
   <body>
     <table id="toprow">
         <tr>
-            <td><div id="timeDisplay" style="text-align: left;"></div></td>
+            <td><div id="totalTimeDisplay" style="text-align: left;"></div></td>
             <td><div id="timerdisplay" style="font-size: 24px; text-align: center;">00:00</div></td>
             <td><div id="dateDisplay" style="text-align: right;" onclick="displayDate()"></div></td>
         </tr>
@@ -88,35 +88,62 @@
             return time < 10 ? `0${time}` : `${time}`;
         }
 
+        function formatTotalTimerWithHours(seconds) {
+            let timeString = new Date(seconds * 1000).toISOString().substr(11, 8);
+            if (seconds < 86400) {
+                return timeString;
+            } else {
+                let days = Math.floor(seconds / 86400);
+                if (days === 1) {
+                    timeString = days + " day " + timeString;
+                } else {
+                    timeString = days + " days " + timeString;
+                }
+                return timeString;
+            }
+        }
+
         function updateTimer() {
             if (running) {
-            seconds += 1;
-            if (seconds === 60) {
-                seconds = 0;
-                minutes += 1;
-            }
-            const timeString = `${formatTimer(minutes)}:${formatTimer(seconds)}`;
-            timerdisplay.textContent = timeString;
-            setTimeout(updateTimer, 1000);
+                seconds += 1;
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes += 1;
+                }
+                if (minutes > 10) {
+                    timerdisplay.style.fontSize = "48px";
+                }
+                const timeString = `${formatTimer(minutes)}:${formatTimer(seconds)}`;
+                timerdisplay.textContent = timeString;
+                if (seconds > 3600) { // if they have been gone for more than an hour, stop the timer
+                    let student = activeButton.textContent;
+                    activeButton.click();
+                    alert(student + " has been gone for more than an hour.\nTimer has been reset.");
+                } else {
+                    setTimeout(updateTimer, 1000);
+                }
             }
         }
 
         function clickButton(button) {
-            displayDate();
-            if (seconds || minutes) {
-                const logThis = `${button.textContent},${minutes * 60 + seconds},${new Date().toISOString()}`;
-                saveToLocalStorage(logThis);
-            }
+            displayDate();  // update the date, in case we haven't done so recently
+            let student = button.textContent;
             seconds = 0;
             minutes = 0;
-            timerdisplay.textContent = "00:00";
+            
             if (!running) {
                 running = true;
-                timerdisplay.style.color = color2;
-                if (minutes > 10) {
-                    //timerdisplay.style.color = "red";
-                    timerdisplay.style.fontSize = "48px";
+                timerdisplay.textContent = "00:00";
+                // get and display the total time for this student
+                const totalSecondsString = localStorage.getItem(student);
+                if (totalSecondsString != null) {
+                    totalSeconds = parseInt(totalSecondsString);
+                    totalTimeDisplay.textContent = formatTotalTimerWithHours(totalSeconds);
                 }
+                totalTimeDisplay.style.color = color2;
+                // display the timer
+                timerdisplay.style.color = color2;
+                // deactivate all other buttons
                 activeButton = button;
                 buttons.forEach((otherButton) => {
                     if (otherButton !== button) {
@@ -126,10 +153,23 @@
                     }
                 });
                 updateTimer();
+
             } else {
                 running = false;
+                // get the time
+                let elapsedTimeString = timerdisplay.textContent;
+                let elapsedTimeArray = elapsedTimeString.split(":");
+                let minutes = parseInt(elapsedTimeArray[0]);
+                let seconds = parseInt(elapsedTimeArray[1]);
+                let elapsedSeconds = minutes*60 + seconds;
+                // save the total time to local storage
+                addToLocalStorage(student, elapsedSeconds);
+                // reset the displays
                 timerdisplay.style.color = color1;
                 timerdisplay.style.fontSize = "24px";
+                totalTimeDisplay.style.color = color1;
+                totalTimeDisplay.textContent = '';
+                // reset the buttons
                 activeButton = null;
                 buttons.forEach((otherButton) => {
                     otherButton.disabled = false;
@@ -139,28 +179,14 @@
             }
         }
 
-        function saveToLocalStorage(data) {
-            const logs = JSON.parse(localStorage.getItem('signout-logs')) || [];
-            logs.push(data);
-            localStorage.setItem('signout-logs', JSON.stringify(logs));
-        }
-
-        function loadFromLocalStorage() {
-            const logs = JSON.parse(localStorage.getItem('signout-logs')) || [];
-            logs.forEach((log) => {
-                const [student, time, date] = log.split(',');
-                const row = document.createElement('tr');
-                const studentCell = document.createElement('td');
-                studentCell.textContent = student;
-                const timeCell = document.createElement('td');
-                timeCell.textContent = time;
-                const dateCell = document.createElement('td');
-                dateCell.textContent = date;
-                row.appendChild(studentCell);
-                row.appendChild(timeCell);
-                row.appendChild(dateCell);
-                document.querySelector('tbody').appendChild(row);
-            });
+        function addToLocalStorage(student, seconds) {
+            if (localStorage.getItem(student) != null) {
+                let total_time = localStorage.getItem(student);
+                total_time = parseInt(total_time) + parseInt(seconds);
+                localStorage.setItem(student, total_time);
+            } else {
+                localStorage.setItem(student, seconds);
+            }
         }
 
         function displayDate() {
