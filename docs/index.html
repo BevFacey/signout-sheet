@@ -13,7 +13,7 @@
     <h1 id="title">Student Break Timer Creator</h1>
     <table>
         <tr>
-            <td>Paste student names into the text boxes, then click the generate timer button.</td>
+            <td>Paste student names into the text boxes, then click the Generate Timer button.</td>
             <td>
                 Optional colors for the timer:
                     <input type="color" id="color1" value="#000000">
@@ -37,10 +37,10 @@
     <div style="text-align: center;" id="url"></div>
     <br>
     <div id="qrcode"></div>
+    <div style="text-align: right;"><button style="font-size: 8px;" onclick="localStorage.clear();">Clear all logged data</button></div>
     
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
-        localStorage.clear();
         document.getElementById("generate").addEventListener("click", () => {
             // get the text from the textareas, split it by new line, remove empty values, and join it with !
             let class1Array = document.getElementById("class1").value.split("\n").filter(Boolean).join("!");
