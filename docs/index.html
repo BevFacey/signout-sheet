@@ -53,7 +53,9 @@
             let color1 = document.getElementById("color1").value;
             let color2 = document.getElementById("color2").value;
             // build the url
-            let url = "https://bev.facey.rocks/signout-sheet/timer.html?class1="+class1Array;
+            //let url = "https://bev.facey.rocks/signout-sheet/timer.html?class1="+class1Array;
+            let currentUrl = window.location.href.split("index.html")[0];
+            let url = currentUrl + "?class1="+class1Array;
             if (class2Array) {url += "&class2="+class2Array;}
             if (class3Array) {url += "&class3="+class3Array;}
             if (class4Array) {url += "&class4="+class4Array;}
