@@ -34,9 +34,11 @@
     </table>
     <div style="text-align: center;"><button style="font-size:larger;" id="generate">Generate Timer</button></div>
     <br>
-    <div style="text-align: center;" id="url"></div>
+    <div id="url"></div>
     <br>
-    <div id="qrcode"></div>
+    <div style="text-align: center;"><button id="download" style="display: none">Download link as a URL file</button></div>
+    <br>
+    <div style="text-align: center;" id="qrcode"></div>
     <div style="text-align: right;"><button style="font-size: 8px;" onclick="localStorage.clear();">Clear all logged data</button></div>
     
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
@@ -63,8 +65,8 @@
             if (color1!="#000000") {url += "&color1="+color1.replace("#","%23");}
             if (color2!="#ffffff") {url += "&color2="+color2.replace("#","%23");}
             document.getElementById("url").innerHTML = "Click or bookmark this link:<br><a href='" + url + "'>" + url + "</a>";
-            document.getElementById("url").style.color = "black";
             new QRCode(document.getElementById("qrcode"), url);
+            document.getElementById("download").style.display = "block";  // show download button
         });
 
         // color pickers
@@ -77,6 +79,18 @@
             document.getElementById("title").style.color = color2;
         });
 
+        // download link
+        document.getElementById("download").addEventListener("click", () => {
+            let url = document.getElementById("url").getElementsByTagName("a")[0].href;
+            let filename = "student_timer.url";
+            let element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(url));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
     </script>
   </body>
 </html>
