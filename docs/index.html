@@ -43,6 +43,32 @@
     
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
+        // get the url parameters
+        let urlParams = new URLSearchParams(window.location.search);
+        let class1 = urlParams.get('class1');
+        let class2 = urlParams.get('class2');
+        let class3 = urlParams.get('class3');
+        let class4 = urlParams.get('class4');
+        let class5 = urlParams.get('class5');
+        let class6 = urlParams.get('class6');
+        let color1 = urlParams.get('color1');
+        let color2 = urlParams.get('color2');
+        // if there are url parameters, fill in the textareas
+        if (class1) {document.getElementById("class1").value = class1.replace(/!/g, "\n");}
+        if (class2) {document.getElementById("class2").value = class2.replace(/!/g, "\n");}
+        if (class3) {document.getElementById("class3").value = class3.replace(/!/g, "\n");}
+        if (class4) {document.getElementById("class4").value = class4.replace(/!/g, "\n");}
+        if (class5) {document.getElementById("class5").value = class5.replace(/!/g, "\n");}
+        if (class6) {document.getElementById("class6").value = class6.replace(/!/g, "\n");}
+        if (color1) {
+            document.getElementById("color1").value = color1.replace(/%23/g, "#");
+            document.getElementById("title").style.backgroundColor = color1;
+        }
+        if (color2) {
+            document.getElementById("color2").value = color2.replace(/%23/g, "#");
+            document.getElementById("title").style.color = color2;
+        }
+
         document.getElementById("generate").addEventListener("click", () => {
             // get the text from the textareas, split it by new line, remove empty values, and join it with !
             let class1Array = document.getElementById("class1").value.split("\n").filter(Boolean).join("!");
