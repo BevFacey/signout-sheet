@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Student Break Timer 2.0</title>
+    <style>
+        body {font-family: Arial, sans-serif; background-color: white;}
+        table {width: 100%; table-layout: fixed; font-size: 24px; padding: 10px;}
+        td {width: 33%;}
+        button {background-color: white; border: none; padding: 10px; margin: 5px; cursor: pointer; border-radius: 16px;}
+        #studentOut {margin-right: 24px;}
+        .big-leaving-btn {
+            font-size: 36px !important;
+            padding: 20px 20px !important;
+        }
+        .normal-leaving-btn {
+            font-size: 18px !important;
+            padding: 10px 10px !important;
+        }
+    </style>
+  </head>
+  <body>
+    <table id="toprow">
+        <tr>
+            <td><div id="totalTimeDisplay" style="text-align: left;"></div></td>
+            <td><div id="studentOut" style="text-align: right;"></div></td>
+            <td><div id="timerdisplay" style="font-size: 24px; text-align: left;">00:00</div></td>
+            <td><div id="dateDisplay" style="text-align: right;" onclick="displayDate()"></div></td>
+        </tr>
+    </table>
+    <div id="studentsLeaving" style="text-align: center; font-size: 18px; margin-bottom: 10px;"></div>
+    <hr>
+    <script>
+        let buttons = [];
+
+        let color1 = "#0161ad";  // Facey colors
+        let color2 = "#fec502";
+        //let color1 = "#000000";
+        //let color2 = "#ffffff";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('color1')) {color1 = urlParams.get('color1');} 
+        if (urlParams.has('color2')) {color2 = urlParams.get('color2');}
+
+        if (urlParams.has('students')) {
+            const students = urlParams.get('students').split("!");
+            createButtonsFromArray(students)
+        }
+                
+        function createButtonsFromArray(array) {
+            for (let i=0; i<array.length; i++) {  // loop through students and create a button for each
+                const button = document.createElement("button");
+                button.textContent = array[i];
+                button.style.color = color1;
+                button.style.backgroundColor = color2;
+                button.addEventListener("click", () => clickButton(button));
+                document.body.appendChild(button);
+                buttons.push(button);
+            }
+            //document.body.appendChild(document.createElement("hr"));  // add a horizontal rule
+        }
+
+        // style the header
+        document.getElementById("toprow").style.backgroundColor = color1;
+        document.getElementById("toprow").style.color = color2;
+        timerdisplay.style.color = color1;
+
+        displayDate();
+
+        // timer
+        let seconds = 0;
+        let minutes = 0;
+        let running = false;
+        let activeButton = null;
+        let activeStudent = null;
+        let timerId = null;
+      
+        function formatTimer(time) {
+            return time < 10 ? `0${time}` : `${time}`;
+        }
+
+        function formatTotalTimerWithHours(seconds) {
+            let timeString = new Date(seconds * 1000).toISOString().substr(11, 8);
+            if (seconds < 86400) {
+                return timeString;
+            } else {
+                let days = Math.floor(seconds / 86400);
+                if (days === 1) {
+                    timeString = days + " day " + timeString;
+                } else {
+                    timeString = days + " days " + timeString;
+                }
+                return timeString;
+            }
+        }
+
+        function updateTimer() {
+            if (running) {
+                seconds += 1;
+                if (seconds === 60) {
+                    seconds = 0;
+                    minutes += 1;
+                }
+                if (minutes > 10) {
+                    timerdisplay.style.fontSize = "48px";
+                }
+                const timeString = `${formatTimer(minutes)}:${formatTimer(seconds)}`;
+                timerdisplay.textContent = timeString;
+                if (minutes > 20) { // if they have been gone for more than half an hour, stop the timer
+                    let student = activeStudent;
+                    stopCurrentTimer(student);
+                    alert(student + " has been gone for more than twenty minutes.\nTimer has been reset.");
+                } else {
+                    timerId = setTimeout(updateTimer, 1000);
+                }
+            }
+        }
+
+        function clickButton(button) {
+            displayDate();  // update the date, in case we haven't done so recently
+            let student = button.textContent;
+
+            // Clone the button and add to studentsLeaving
+            const leavingDiv = document.getElementById("studentsLeaving");
+            const leavingButton = button.cloneNode(true);
+            leavingButton.classList.add("normal-leaving-btn");
+            leavingButton.disabled = false;
+            leavingDiv.appendChild(leavingButton);
+
+            // Add click event to the leavingButton (for removal and restoration)
+            leavingButton.addEventListener("click", function() {
+                // Stop timer for current student
+                stopCurrentTimer(student);
+                // Remove this button from studentsLeaving
+                leavingDiv.removeChild(leavingButton);
+                // Restore the original button
+                button.style.opacity = "1";
+                button.disabled = false;
+                // Make the next button big and start its timer
+                const allLeavingButtons = leavingDiv.querySelectorAll("button");
+                allLeavingButtons.forEach((btn, idx) => {
+                    btn.classList.remove("big-leaving-btn", "normal-leaving-btn");
+                    if (idx === 0) {
+                        btn.classList.add("big-leaving-btn");
+                    } else {
+                        btn.classList.add("normal-leaving-btn");
+                    }
+                });
+                // Update studentOut div with the big button's text
+                updateStudentOut(allLeavingButtons);
+                if (allLeavingButtons.length > 0) {
+                    startStudentTimer(allLeavingButtons[0].textContent);
+                } else {
+                    resetTimerDisplay();
+                }
+            });
+
+            // Style the top button as big, others as normal
+            const allLeavingButtons = leavingDiv.querySelectorAll("button");
+            allLeavingButtons.forEach((btn, idx) => {
+                btn.classList.remove("big-leaving-btn", "normal-leaving-btn");
+                if (idx === 0) {
+                    btn.classList.add("big-leaving-btn");
+                } else {
+                    btn.classList.add("normal-leaving-btn");
+                }
+            });
+            // Update studentOut div with the big button's text
+            updateStudentOut(allLeavingButtons);
+
+            // grey out the original button
+            button.style.opacity = "0.6";
+            button.disabled = true;
+
+            // If this is the only button in studentsLeaving, start its timer
+            if (allLeavingButtons.length === 1) {
+                startStudentTimer(student);
+            }
+        }
+
+        function startStudentTimer(student) {
+            // Stop any previous timer
+            if (timerId) {
+                clearTimeout(timerId);
+                timerId = null;
+            }
+            seconds = 0;
+            minutes = 0;
+            running = true;
+            activeStudent = student;
+            timerdisplay.textContent = "00:00";
+            const totalSecondsString = localStorage.getItem(student);
+            if (totalSecondsString != null) {
+                totalSeconds = parseInt(totalSecondsString);
+                totalTimeDisplay.textContent = formatTotalTimerWithHours(totalSeconds);
+            } else {
+                totalTimeDisplay.textContent = '';
+            }
+            totalTimeDisplay.style.color = color2;
+            timerdisplay.style.color = color2;
+            updateTimer();
+        }
+
+        function stopCurrentTimer(student) {
+            running = false;
+            if (timerId) {
+                clearTimeout(timerId);
+                timerId = null;
+            }
+            let elapsedTimeString = timerdisplay.textContent;
+            let elapsedTimeArray = elapsedTimeString.split(":");
+            let minutesElapsed = parseInt(elapsedTimeArray[0]);
+            let secondsElapsed = parseInt(elapsedTimeArray[1]);
+            let elapsedSeconds = minutesElapsed*60 + secondsElapsed;
+            addToLocalStorage(student, elapsedSeconds);
+            resetTimerDisplay();
+        }
+
+        function resetTimerDisplay() {
+            timerdisplay.style.color = color1;
+            timerdisplay.style.fontSize = "24px";
+            totalTimeDisplay.style.color = color1;
+            totalTimeDisplay.textContent = '';
+            timerdisplay.textContent = "00:00";
+            activeStudent = null;
+        }
+
+        function addToLocalStorage(student, seconds) {
+            if (localStorage.getItem(student) != null) {
+                let total_time = localStorage.getItem(student);
+                total_time = parseInt(total_time) + parseInt(seconds);
+                localStorage.setItem(student, total_time);
+            } else {
+                localStorage.setItem(student, seconds);
+            }
+        }
+
+        function displayDate() {
+            const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            let date = new Date();
+            let weekdayNumber = date.getDay();
+            let weekday = weekdays[weekdayNumber];
+            let dateString = weekday + " " + date.toISOString().split("T")[0];
+            dateDisplay.textContent = dateString;
+        }
+
+        // Update the studentOut div with the text of the big button
+        function updateStudentOut(leavingButtons) {
+            const studentOutDiv = document.getElementById("studentOut");
+            if (leavingButtons.length > 0) {
+                studentOutDiv.textContent = leavingButtons[0].textContent;
+            } else {
+                studentOutDiv.textContent = "";
+            }
+        }
+        </script>
+  </body>
+</html>
