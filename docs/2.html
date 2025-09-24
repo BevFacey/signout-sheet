@@ -106,7 +106,10 @@
                 }
                 const timeString = `${formatTimer(minutes)}:${formatTimer(seconds)}`;
                 timerdisplay.textContent = timeString;
-                if (minutes > 20) { // if they have been gone for more than half an hour, stop the timer
+                if (minutes > 15) {
+                    timerdisplay.style.color = "red";
+                }
+                if (minutes > 20) { // if they have been gone for more than twenty minutes, stop the timer
                     let student = activeStudent;
                     stopCurrentTimer(student);
                     alert(student + " has been gone for more than twenty minutes.\nTimer has been reset.");
