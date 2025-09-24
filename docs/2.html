@@ -60,10 +60,14 @@
             //document.body.appendChild(document.createElement("hr"));  // add a horizontal rule
         }
 
-        // style the header
-        document.getElementById("toprow").style.backgroundColor = color1;
-        document.getElementById("toprow").style.color = color2;
-        timerdisplay.style.color = color1;
+    // get references to display elements
+    const totalTimeDisplay = document.getElementById("totalTimeDisplay");
+    const timerdisplay = document.getElementById("timerdisplay");
+
+    // style the header
+    document.getElementById("toprow").style.backgroundColor = color1;
+    document.getElementById("toprow").style.color = color2;
+    timerdisplay.style.color = color1;
 
         displayDate();
 
@@ -217,6 +221,7 @@
             let elapsedSeconds = minutesElapsed*60 + secondsElapsed;
             addToLocalStorage(student, elapsedSeconds);
             resetTimerDisplay();
+            updateTotalTimes();
         }
 
         function resetTimerDisplay() {
@@ -256,6 +261,32 @@
                 studentOutDiv.textContent = "";
             }
         }
+
+        
+        // add a div to show total times for all students
+        document.body.appendChild(document.createElement("hr"));
+        const totalTimeDiv = document.createElement("div");
+        totalTimeDiv.id = "totalTimeDisplay";
+        totalTimeDiv.style.textAlign = "center";
+        document.body.appendChild(totalTimeDiv);
+
+        function updateTotalTimes() {
+            let totalTimes = [];
+            for (let i = 0; i < buttons.length; i++) {
+                let student = buttons[i].textContent;
+                let totalSecondsString = localStorage.getItem(student);
+                if (totalSecondsString != null) {
+                    let totalSeconds = parseInt(totalSecondsString);
+                    totalTimes.push({student: student, seconds: totalSeconds});
+                }
+            }
+            // Sort by seconds descending
+            totalTimes.sort((a, b) => b.seconds - a.seconds);
+            // Create display string
+            let displayStrings = totalTimes.map(entry => `${entry.student}: ${formatTotalTimerWithHours(entry.seconds)}`);
+            totalTimeDiv.innerHTML = displayStrings.join("<br><br>");
+        }
+
         </script>
   </body>
 </html>
